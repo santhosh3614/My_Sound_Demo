@@ -1,0 +1,153 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="@android:color/white"
+    tools:context=".MainActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/accent"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/AppTheme">
+
+        <TextView
+            android:id="@+id/toolbacontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:text="@string/action_bar_title" />
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/drop_down"
+        android:layout_below="@+id/toolbar_top"
+        android:orientation="vertical"
+        android:padding="@dimen/info_text_size">
+
+        <com.megaminds.sounddemoapp.custom.SPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:text="@string/current"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/info_text_size" />
+
+        <com.megaminds.sounddemoapp.custom.SPTextView
+            android:id="@+id/current_decibels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/honeycombish_blue"
+            android:textSize="@dimen/info_number_text_height" />
+
+        <com.megaminds.sounddemoapp.custom.SPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:singleLine="false"
+            android:textColor="@android:color/black"
+            android:text="@string/db"
+            android:textSize="@dimen/info_text_size" />
+    </LinearLayout>
+
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/dur_title_txtview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/quiet_radio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:checked="true"
+            android:textColor="@color/green"
+            android:text="@string/quiet"/>
+
+        <RadioButton
+            android:id="@+id/group_radio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:textColor="@color/yellow"
+            android:text="@string/group"/>
+
+        <RadioButton
+            android:id="@+id/noisy_radio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:textColor="@color/red"
+            android:text="@string/noisy"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/dur_title_txtview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radiogroup"
+        android:layout_margin="20dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:text="@string/duration"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/dur_title_txtview"
+        android:layout_below="@+id/radiogroup"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/quiet_dur_txtview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:textColor="@android:color/black"
+            android:text="--:--:--"/>
+        <TextView
+            android:id="@+id/group_dur_txtview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:textColor="@android:color/black"
+            android:text="--:--:--"/>
+        <TextView
+            android:id="@+id/noisy_dur_txtview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:textColor="@android:color/black"
+            android:text="--:--:--"/>
+    </LinearLayout>
+
+</RelativeLayout>

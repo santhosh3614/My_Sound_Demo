@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="my_awesome_color">#ff8400</color>
+    <color name="my_awesome_darker_color">#ff8400</color>
+    <color name="accent">#ff8400</color>
+    <color name="honeycombish_blue">#d8621a</color>
+
+    <color name="green">#ff65d881</color>
+    <color name="yellow">#ffd8b12b</color>
+    <color name="red">#ffd87a76</color>
+
+</resources>
