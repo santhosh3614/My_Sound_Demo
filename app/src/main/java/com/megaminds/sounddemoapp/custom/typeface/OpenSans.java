@@ -8,22 +8,20 @@ public class OpenSans {
     private static OpenSans instance;
     private Typeface typeface;
 
-    public OpenSans() {
+    private OpenSans(Context context) {
+        typeface = Typeface.createFromAsset(context.getApplicationContext().getResources().getAssets(),
+                "open_sans_light.ttf");
     }
 
-    public static OpenSans getInstance() {
+    public static OpenSans getInstance(Context context) {
         synchronized (OpenSans.class) {
             if (instance == null)
-                instance = new OpenSans();
+                instance = new OpenSans(context);
             return instance;
         }
     }
 
-    public Typeface getTypeFace(Context context) {
-        if (typeface == null) {
-            typeface = Typeface.createFromAsset(context.getApplicationContext().getResources().getAssets(),
-                    "open_sans_light.ttf");
-        }
+    public Typeface getTypeFace() {
         return typeface;
     }
 }

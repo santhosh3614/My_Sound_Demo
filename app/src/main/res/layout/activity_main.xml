@@ -26,48 +26,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/drop_down"
-        android:layout_below="@+id/toolbar_top"
-        android:orientation="vertical"
-        android:padding="@dimen/info_text_size">
-
-        <com.megaminds.sounddemoapp.custom.SPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:singleLine="false"
-            android:text="@string/current"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/info_text_size" />
-
-        <com.megaminds.sounddemoapp.custom.SPTextView
-            android:id="@+id/current_decibels"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/honeycombish_blue"
-            android:textSize="@dimen/info_number_text_height" />
-
-        <com.megaminds.sounddemoapp.custom.SPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:singleLine="false"
-            android:textColor="@android:color/black"
-            android:text="@string/db"
-            android:textSize="@dimen/info_text_size" />
-    </LinearLayout>
-
-
     <RadioGroup
         android:id="@+id/radiogroup"
         android:orientation="horizontal"
@@ -84,7 +42,7 @@
             android:layout_weight="1"
             android:enabled="false"
             android:checked="true"
-            android:textColor="@color/green"
+            android:textColor="@android:color/black"
             android:text="@string/quiet"/>
 
         <RadioButton
@@ -93,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:textColor="@color/yellow"
+            android:textColor="@android:color/black"
             android:text="@string/group"/>
 
         <RadioButton
@@ -102,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:textColor="@color/red"
+            android:textColor="@android:color/black"
             android:text="@string/noisy"/>
     </RadioGroup>
 

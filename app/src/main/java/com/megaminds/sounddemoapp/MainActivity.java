@@ -17,7 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.megaminds.sounddemoapp.custom.SPTextView;
+import com.megaminds.sounddemoapp.custom.typeface.OpenSans;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +28,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int FEATURE_NOT_AVAILBLE = 12;
+    private static final int POLL_INTERVAL = 100;
 
     @Bind(R.id.toolbar_top)
     Toolbar toolbarTop;
@@ -47,62 +49,47 @@ public class MainActivity extends AppCompatActivity {
     TextView groupDurTxtview;
     @Bind(R.id.noisy_dur_txtview)
     TextView noisyDurTxtview;
-    @Bind(R.id.current_decibels)
-    SPTextView currentDecibels;
-    private int FEATURE_NOT_AVAILBLE;
-    private static final int POLL_INTERVAL = 100;
+
+    private int startOffset;
+    private double avgdB;
     private SoundMeter soundMeter;
     private boolean micPresent;
 
-    private long quietSec, groupSec, noisySec;
     private Handler handler = new Handler();
+
     private Runnable mRunPool = new Runnable() {
         @Override
         public void run() {
-            //TODO refresh UI
             updateTime(soundMeter.soundDb());
             handler.postDelayed(this, POLL_INTERVAL);
         }
     };
+    private SoundMeterDb soundMeterDb;
+    private SoundLevel soundlevel;
+
 
     private void updateTime(double db) {
-        currentDecibels.setText(String.valueOf((int)db));
-        if (db <= 55) {
-            quietRadioBtn.setChecked(true);
-            quietSec += POLL_INTERVAL;
-            quietDurTxtview.setText(getDuration(quietSec));
-        } else if (db <= 70) {
-            groupRadioBtn.setChecked(true);
-            groupSec += POLL_INTERVAL;
-            groupDurTxtview.setText(getDuration(groupSec));
-        } else {
-            noisyRadioBtn.setChecked(true);
-            noisySec += POLL_INTERVAL;
-            noisyDurTxtview.setText(getDuration(noisySec));
+        startOffset+=POLL_INTERVAL;
+        avgdB+=db;
+        Log.d(TAG, "updateTime....." + startOffset);
+        if(startOffset==1000){
+            db=avgdB/10;
+            if (db <= 55) {
+                quietRadioBtn.setChecked(true);
+                soundlevel.quietLevel += startOffset;
+                quietDurTxtview.setText(getDuration(soundlevel.quietLevel));
+            } else if (db <= 70) {
+                groupRadioBtn.setChecked(true);
+                soundlevel.groupLevel += startOffset;
+                groupDurTxtview.setText(getDuration(soundlevel.groupLevel));
+            } else {
+                noisyRadioBtn.setChecked(true);
+                soundlevel.noiseLevel += startOffset;
+                noisyDurTxtview.setText(getDuration(soundlevel.noiseLevel));
+            }
+            startOffset=0;
+            avgdB=0;
         }
-    }
-
-//    String getTime(long sec) {
-//        if (sec < 60) {
-//            return "<1";
-//        } else {
-//            Log.d(TAG,"Sec:"+sec);
-//            int mintes=(int)((float)sec / 60);
-//            return String.valueOf(mintes);
-//        }
-//    }
-
-    private void readApplicationPreferences() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        long millis = prefs.getLong("millis", System.currentTimeMillis());
-        boolean isToday = isToday(millis);
-        Log.d(TAG, "ISToday:" + isToday);
-        if (!isToday) {
-            prefs.edit().clear().commit();
-        }
-        quietSec = prefs.getLong("Quiet_millis", 0);
-        groupSec = prefs.getLong("Group_millis", 0);
-        noisySec = prefs.getLong("Noisy_millis", 0);
     }
 
     private String getDuration(long milliseconds) {
@@ -112,40 +99,31 @@ public class MainActivity extends AppCompatActivity {
         return String.format("%d:%d:%d", hours, minutes, seconds);
     }
 
-    private boolean isToday(long prefMillis) {
+    private long getToadyMillis(){
         Calendar prefcal = Calendar.getInstance();
-        prefcal.setTimeInMillis(prefMillis);
+        prefcal.setTimeInMillis(System.currentTimeMillis());
         prefcal.set(Calendar.HOUR_OF_DAY, 0);
         prefcal.set(Calendar.MINUTE, 0);
         prefcal.set(Calendar.SECOND, 0);
         prefcal.set(Calendar.MILLISECOND, 0);
 
-        prefMillis = prefcal.getTimeInMillis();
-        long currentMillis = System.currentTimeMillis();
-        Log.d(TAG, "Pref Time:" + new Date(prefMillis));
-        Log.d(TAG, "Current Time:" + new Date(currentMillis));
-
-        return currentMillis > prefMillis && currentMillis < (prefMillis + AlarmManager.INTERVAL_DAY);
+        return prefcal.getTimeInMillis();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.edit().putLong("millis", System.currentTimeMillis()).putLong("Quiet_millis", quietSec)
-                .putLong("Group_millis", groupSec)
-                .putLong("Noisy_millis", noisySec).commit();
+        soundMeterDb.updateSoundLevel(soundlevel);
         stopMeasuring();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        readApplicationPreferences();
         startMeasuring();
-        quietDurTxtview.setText(getDuration(quietSec));
-        groupDurTxtview.setText(getDuration(groupSec));
-        noisyDurTxtview.setText(getDuration(noisySec));
+        quietDurTxtview.setText(getDuration(soundlevel.quietLevel));
+        groupDurTxtview.setText(getDuration(soundlevel.groupLevel));
+        noisyDurTxtview.setText(getDuration(soundlevel.noiseLevel));
     }
 
     @Override
@@ -153,6 +131,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        soundMeterDb=new SoundMeterDb(this);
+        long todayMillis=getToadyMillis();
+        quietDurTxtview.setTypeface(OpenSans.getInstance(this).getTypeFace());
+        groupDurTxtview.setTypeface(OpenSans.getInstance(this).getTypeFace());
+        noisyDurTxtview.setTypeface(OpenSans.getInstance(this).getTypeFace());
+        soundlevel = soundMeterDb.getSoundlevel(todayMillis);
+        if(soundlevel==null){
+            soundlevel=soundMeterDb.insertSoundLevel(todayMillis);
+        }
         setSupportActionBar(toolbarTop);
         setTitle("");
         PackageManager pm = getPackageManager();
@@ -176,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         if (micPresent) {
             soundMeter.stop();
             handler.removeCallbacks(mRunPool);
+            startOffset=0;
+            avgdB=0;
         }
     }
 

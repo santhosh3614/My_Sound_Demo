@@ -38,6 +38,7 @@ public class SoundMeter {
                 mRecorder.setOutputFile("/dev/null");
                 mRecorder.prepare();
                 mRecorder.start();
+
                 mEMA = 0.0;
             } catch (IOException e) {
                 e.printStackTrace();
